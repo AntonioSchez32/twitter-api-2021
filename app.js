@@ -13,6 +13,8 @@ var postsRouter = require('./routes/posts');
 var bodyParser  = require("body-parser");   //nuevo
 var cors = require('cors');   //nuevo
 
+var app = express();
+
 require('dotenv').config();
 
 // view engine setup
@@ -33,15 +35,24 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-app.use(cors());  //nuevo
+// Set up a whitelist and check against it: 
+var whitelist = ['http://antonioschez32.github.io', 'http://antonioschez32.github.io/twitter-react-2021'] 
+var corsOptions = { 
+  origin: function (origin, callback) { 
+    if (whitelist.indexOf(origin) !== -1) { 
+      callback(null, true) 
+    } else { 
+      callback(new Error('Not allowed by CORS')) 
+    } 
+  } 
+} // Then pass them to cors: app.use(cors(corsOptions));
+app.use(cors(corsOptions));  //nuevo
 app.use(bodyParser.json({limit: '50mb'}));  //nuevo
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));   //nuevo
 
 mongoose.connect(process.env.DB_URI, { useNewUrlParser: true })
     .then(() =>  console.log('mymerndb connection successful'))
     .catch((err) => console.error(err));
-
-var app = express();
 
 // error handler
 app.use(function(err, req, res, next) {
