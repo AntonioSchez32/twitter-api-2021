@@ -13,8 +13,6 @@ var postsRouter = require('./routes/posts');
 var bodyParser  = require("body-parser");   //nuevo
 var cors = require('cors');   //nuevo
 
-var app = express();
-
 require('dotenv').config();
 
 // view engine setup
@@ -42,6 +40,8 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));   //nuevo
 mongoose.connect(process.env.DB_URI, { useNewUrlParser: true })
     .then(() =>  console.log('mymerndb connection successful'))
     .catch((err) => console.error(err));
+
+var app = express();
 
 // error handler
 app.use(function(err, req, res, next) {
